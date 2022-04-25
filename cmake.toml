@@ -15,7 +15,7 @@ type = "executable"
 sources = ["src/main.cpp"]
 include-directories = ["${LLVM_INCLUDE_DIRS}", "${CLANG_INCLUDE_DIRS}"]
 link-directories = ["${LLVM_LIBRARY_DIRS}", "${CLANG_LIBRARY_DIRS}"]
-compile-definitions = ["${LLVM_DEFINITIONS}", "${CLANG_DEFINITIONS}"]
+add-definitions = ["${LLVM_DEFINITIONS}", "${CLANG_DEFINITIONS}"]
 link-libraries = [
 "LLVMSupport", 
 "LLVMAnalysis",

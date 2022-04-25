@@ -63,11 +63,10 @@ endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LL-Testing_SOURCES})
 
-target_compile_definitions(LL-Testing PRIVATE
-	${LLVM_DEFINITIONS}
-	${CLANG_DEFINITIONS}
+add_definitions(
+		${LLVM_DEFINITIONS}
+		${CLANG_DEFINITIONS}
 )
-
 target_include_directories(LL-Testing PRIVATE
 	${LLVM_INCLUDE_DIRS}
 	${CLANG_INCLUDE_DIRS}
