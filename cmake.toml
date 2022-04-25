@@ -1,8 +1,21 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
 [project]
-name = "cmkr_for_beginners"
-description = "A minimal cmkr project."
+name = "LL-Testing"
+description = "LL-Testing."
 
-[target.hello_world]
+[find-package.LLVM]
+[find-package.Clang]
+
+[target.LL-Testing]
 type = "executable"
 sources = ["src/main.cpp"]
+include-directories = ["${LLVM_INCLUDE_DIRS}", "${CLANG_INCLUDE_DIRS}"]
+link-directories = ["${LLVM_LIBRARY_DIRS}", "${CLANG_LIBRARY_DIRS}"]
+compile-definitions = ["${LLVM_DEFINITIONS}", "${CLANG_DEFINITIONS}"]
+link-libraries = [
+"LLVMSupport", 
+"LLVMAnalysis",
+"LLVMCore",
+"LLVMCodeGen"
+]
+

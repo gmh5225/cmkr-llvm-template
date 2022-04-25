@@ -27,36 +27,63 @@ if(CMKR_ROOT_PROJECT)
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-project(cmkr_for_beginners
+project(LL-Testing
 	DESCRIPTION
-		"A minimal cmkr project."
+		LL-Testing.
 )
 
-# Target hello_world
-set(CMKR_TARGET hello_world)
-set(hello_world_SOURCES "")
+# Packages
+find_package(LLVM REQUIRED)
 
-list(APPEND hello_world_SOURCES
+find_package(Clang REQUIRED)
+
+# Target LL-Testing
+set(CMKR_TARGET LL-Testing)
+set(LL-Testing_SOURCES "")
+
+list(APPEND LL-Testing_SOURCES
 	"src/main.cpp"
 )
 
-list(APPEND hello_world_SOURCES
+list(APPEND LL-Testing_SOURCES
 	cmake.toml
 )
 
-set(CMKR_SOURCES ${hello_world_SOURCES})
-add_executable(hello_world)
+set(CMKR_SOURCES ${LL-Testing_SOURCES})
+add_executable(LL-Testing)
 
-if(hello_world_SOURCES)
-	target_sources(hello_world PRIVATE ${hello_world_SOURCES})
+if(LL-Testing_SOURCES)
+	target_sources(LL-Testing PRIVATE ${LL-Testing_SOURCES})
 endif()
 
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
 if(NOT CMKR_VS_STARTUP_PROJECT)
-	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT hello_world)
+	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LL-Testing)
 endif()
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${hello_world_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LL-Testing_SOURCES})
+
+target_compile_definitions(LL-Testing PRIVATE
+	${LLVM_DEFINITIONS}
+	${CLANG_DEFINITIONS}
+)
+
+target_include_directories(LL-Testing PRIVATE
+	${LLVM_INCLUDE_DIRS}
+	${CLANG_INCLUDE_DIRS}
+)
+
+target_link_directories(LL-Testing PRIVATE
+	${LLVM_LIBRARY_DIRS}
+	${CLANG_LIBRARY_DIRS}
+)
+
+target_link_libraries(LL-Testing PRIVATE
+	LLVMSupport
+	LLVMAnalysis
+	LLVMCore
+	LLVMCodeGen
+)
 
 unset(CMKR_TARGET)
 unset(CMKR_SOURCES)
