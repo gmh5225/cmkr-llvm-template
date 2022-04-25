@@ -4,7 +4,11 @@ name = "LL-Testing"
 description = "LL-Testing."
 
 [find-package.LLVM]
+required = true
+config = true
 [find-package.Clang]
+required = true
+config = true
 
 [target.LL-Testing]
 type = "executable"

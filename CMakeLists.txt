@@ -33,9 +33,9 @@ project(LL-Testing
 )
 
 # Packages
-find_package(LLVM REQUIRED)
+find_package(LLVM REQUIRED CONFIG)
 
-find_package(Clang REQUIRED)
+find_package(Clang REQUIRED CONFIG)
 
 # Target LL-Testing
 set(CMKR_TARGET LL-Testing)
