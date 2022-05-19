@@ -10,7 +10,7 @@ config = true
 required = true
 config = true
 
-[target.LL-Testing]
+[target.cmkr-llvm-template]
 type = "executable"
 sources = ["src/main.cpp"]
 include-directories = ["${LLVM_INCLUDE_DIRS}", "${CLANG_INCLUDE_DIRS}"]
