@@ -1,7 +1,7 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
 [project]
-name = "LL-Testing"
-description = "LL-Testing."
+name = "cmkr-llvm-template"
+description = "cmkr-llvm-template"
 
 [find-package.LLVM]
 required = true
