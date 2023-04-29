@@ -3,6 +3,7 @@
 name = "cmkr-llvm-template"
 description = "cmkr-llvm-template"
 
+
 [find-package.LLVM]
 required = true
 config = true
@@ -10,16 +11,20 @@ config = true
 required = true
 config = true
 
+
 [target.cmkr-llvm-template]
 type = "executable"
 sources = ["src/main.cpp"]
 include-directories = ["${LLVM_INCLUDE_DIRS}", "${CLANG_INCLUDE_DIRS}"]
 link-directories = ["${LLVM_LIBRARY_DIRS}", "${CLANG_LIBRARY_DIRS}"]
-add-definitions = ["${LLVM_DEFINITIONS}", "${CLANG_DEFINITIONS}"]
+cmake-before = """
+add_definitions(${LLVM_DEFINITIONS})
+add_definitions(${CLANG_DEFINITIONS})
+"""
 link-libraries = [
-"LLVMSupport", 
-"LLVMAnalysis",
-"LLVMCore",
-"LLVMCodeGen"
+    "LLVMSupport",
+    "LLVMAnalysis",
+    "LLVMCore",
+    "LLVMCodeGen",
+    "LLVMFrontendOpenMP"
 ]
-

@@ -7,12 +7,11 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 	message(FATAL_ERROR "In-tree builds are not supported. Run CMake from a separate directory: cmake -B build")
 endif()
 
-# Regenerate CMakeLists.txt automatically in the root project
 set(CMKR_ROOT_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 	set(CMKR_ROOT_PROJECT ON)
 
-	# Bootstrap cmkr
+	# Bootstrap cmkr and automatically regenerate CMakeLists.txt
 	include(cmkr.cmake OPTIONAL RESULT_VARIABLE CMKR_INCLUDE_RESULT)
 	if(CMKR_INCLUDE_RESULT)
 		cmkr()
@@ -20,16 +19,14 @@ if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 
 	# Enable folder support
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-endif()
 
-# Create a configure-time dependency on cmake.toml to improve IDE support
-if(CMKR_ROOT_PROJECT)
+	# Create a configure-time dependency on cmake.toml to improve IDE support
 	configure_file(cmake.toml cmake.toml COPYONLY)
 endif()
 
-project(LL-Testing
+project(cmkr-llvm-template
 	DESCRIPTION
-		LL-Testing.
+		cmkr-llvm-template
 )
 
 # Packages
@@ -37,53 +34,41 @@ find_package(LLVM REQUIRED CONFIG)
 
 find_package(Clang REQUIRED CONFIG)
 
-# Target LL-Testing
-set(CMKR_TARGET LL-Testing)
-set(LL-Testing_SOURCES "")
+# Target: cmkr-llvm-template
+set(CMKR_TARGET cmkr-llvm-template)
+add_definitions(${LLVM_DEFINITIONS})
+add_definitions(${CLANG_DEFINITIONS})
 
-list(APPEND LL-Testing_SOURCES
+set(cmkr-llvm-template_SOURCES
 	"src/main.cpp"
-)
-
-list(APPEND LL-Testing_SOURCES
 	cmake.toml
 )
 
-set(CMKR_SOURCES ${LL-Testing_SOURCES})
-add_executable(LL-Testing)
+add_executable(cmkr-llvm-template)
 
-if(LL-Testing_SOURCES)
-	target_sources(LL-Testing PRIVATE ${LL-Testing_SOURCES})
-endif()
+target_sources(cmkr-llvm-template PRIVATE ${cmkr-llvm-template_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${cmkr-llvm-template_SOURCES})
 
-get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
-if(NOT CMKR_VS_STARTUP_PROJECT)
-	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LL-Testing)
-endif()
-
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LL-Testing_SOURCES})
-
-add_definitions(
-		${LLVM_DEFINITIONS}
-		${CLANG_DEFINITIONS}
-)
-target_include_directories(LL-Testing PRIVATE
+target_include_directories(cmkr-llvm-template PRIVATE
 	${LLVM_INCLUDE_DIRS}
 	${CLANG_INCLUDE_DIRS}
 )
 
-target_link_directories(LL-Testing PRIVATE
+target_link_directories(cmkr-llvm-template PRIVATE
 	${LLVM_LIBRARY_DIRS}
 	${CLANG_LIBRARY_DIRS}
 )
 
-target_link_libraries(LL-Testing PRIVATE
+target_link_libraries(cmkr-llvm-template PRIVATE
 	LLVMSupport
 	LLVMAnalysis
 	LLVMCore
 	LLVMCodeGen
+	LLVMFrontendOpenMP
 )
 
-unset(CMKR_TARGET)
-unset(CMKR_SOURCES)
+get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
+if(NOT CMKR_VS_STARTUP_PROJECT)
+	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT cmkr-llvm-template)
+endif()
 
